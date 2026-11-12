@@ -1,0 +1,56 @@
+### Role
+
+You are an expert in neighborhood search for curriculum-based course timetabling (CB-CTT). Your task is to induce a complete, state-independent operator preference ordering from verifier-evaluated search evidence aggregated across offline learning states.
+
+### Search Context
+
+The search starts from a feasible timetable and accepts a candidate only if it remains feasible and strictly reduces the soft-constraint objective.
+
+The global preference is used as a fixed operator ordering when no eligible state-dependent preference is available. It must not depend on any particular search-state pattern.
+
+### Available Operators
+
+1. MoveLecture
+2. SwapLectures
+3. RoomChange
+4. KempeMove
+5. RuinRecreate
+
+### Aggregated Evidence
+
+`{GLOBAL_EVIDENCE}`
+
+The evidence is aggregated across all offline learning states.
+
+For each operator, the evidence contains:
+
+- `n_eval`: Number of evaluated candidates.
+- `n_imp`: Number of feasible, strictly improving candidates.
+- `mean_delta_f`: Mean objective change across evaluated candidates.
+- `best_delta_f`: Best observed objective change.
+
+The objective change is defined as \(\Delta f=f(x')-f(x)\). Negative values indicate improvements.
+
+### Instructions
+
+1. Examine the globally aggregated evidence for all five operators.
+2. Consider the feasible improvement rate, computed as `n_imp / n_eval` when `n_eval > 0`.
+3. Consider the mean and best objective changes, preferring smaller values.
+4. Consider the number of evaluated candidates when interpreting the observed outcomes.
+5. Construct a single complete ordering reflecting the available global evidence. No single indicator must determine the ranking in every case.
+6. Do not assume any particular dominant penalty, solution-quality level, or search-progress condition.
+7. If an operator has no evaluated candidates, do not interpret missing objective-change statistics as observed zero changes.
+8. Do not estimate confidence or reliability scores.
+9. Do not generate timetable assignments, modify neighborhood operators, or evaluate feasibility.
+
+### Output Requirements
+
+Return exactly one line containing all five operators, ordered from highest to lowest preference.
+
+Use only the specified operator names, each exactly once.
+
+**Output format:**
+
+`Operator1 > Operator2 > Operator3 > Operator4 > Operator5`
+
+Do not include explanations, confidence scores, additional fields, or commentary.

@@ -1,0 +1,66 @@
+### Role
+
+You are an expert in neighborhood search for curriculum-based course timetabling (CB-CTT). Your task is to induce a complete operator preference ordering from verifier-evaluated search evidence associated with a specific search-state pattern.
+
+### Search Context
+
+The search starts from a feasible timetable and accepts a candidate only if it remains feasible and strictly reduces the soft-constraint objective.
+
+The current search-state pattern is:
+
+\[
+P=(D,Q,G)
+\]
+
+where:
+
+- \(D\): Dominant weighted soft-constraint penalty (Room Capacity, Minimum Working Days, Curriculum Compactness, or Room Stability).
+- \(Q\): Solution-quality level (High, Medium, or Low).
+- \(G\): Recent search progress (Improving or Stagnating).
+
+**Input pattern:** `{STATE_PATTERN}`
+
+### Available Operators
+
+1. MoveLecture
+2. SwapLectures
+3. RoomChange
+4. KempeMove
+5. RuinRecreate
+
+### Aggregated Evidence
+
+`{PATTERN_EVIDENCE}`
+
+For each operator, the evidence contains:
+
+- `n_eval`: Number of evaluated candidates.
+- `n_imp`: Number of feasible, strictly improving candidates.
+- `mean_delta_f`: Mean objective change across evaluated candidates.
+- `best_delta_f`: Best observed objective change.
+
+The objective change is defined as \(\Delta f=f(x')-f(x)\). Negative values indicate improvements.
+
+### Instructions
+
+1. Examine the evidence for all five operators under the supplied search-state pattern.
+2. Consider the feasible improvement rate, computed as `n_imp / n_eval` when `n_eval > 0`.
+3. Consider the mean and best objective changes, preferring smaller values.
+4. Consider the number of evaluated candidates when interpreting the observed outcomes.
+5. Use the search-state pattern to contextualize the evidence, but do not invent additional observations or operator outcomes.
+6. Construct a complete ordering based on the available evidence. No single indicator must determine the ranking in every case.
+7. If an operator has no evaluated candidates, do not interpret missing objective-change statistics as observed zero changes.
+8. Do not estimate confidence or reliability scores. Reliability is assessed separately from the induced ranking.
+9. Do not generate timetable assignments, modify neighborhood operators, or evaluate feasibility.
+
+### Output Requirements
+
+Return exactly one line containing all five operators, ordered from highest to lowest preference.
+
+Use only the specified operator names, each exactly once.
+
+**Output format:**
+
+`Operator1 > Operator2 > Operator3 > Operator4 > Operator5`
+
+Do not include explanations, confidence scores, additional fields, or commentary.
